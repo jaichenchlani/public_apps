@@ -1,0 +1,21 @@
+mathfunctions:
+  host: localhost
+  port: 8080
+  endpoint_changebase: changebase
+  endpoint_getfactors: getfactors
+  endpoint_getprimefactors: getprimefactors
+  endpoint_isprime: isprime
+  endpoint_iseven: iseven
+  endpoint_ispositive: ispositive
+  endpoint_isinteger: isinteger
+change_base_config:
+  Binary(Base 2): 2
+  Ternary(Base 3): 3
+  Quaternary(Base 4): 4
+  Quinary(Base 5): 5
+  Senary(Base 6): 6
+  Octal(Base 8): 8
+  Duodecimal(Base 12): 12
+  Hexadecimal(Base 16): 16
+  Vigesimal(Base 20): 20
+  Base36: 36
