@@ -2,12 +2,16 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 import json, yaml, logging, functools, inspect, os, sys
 import mathfunctions
+import google.cloud.logging
 
 # Create an instance of Flask
 app = Flask(__name__)
 
 # Create the API
 api = Api(app)
+
+client = google.cloud.logging.Client()
+client.setup_logging()
 
 # Load config
 config_filename = "config/config_{}.yaml".format(os.environ['PUBLICAPPS_ENVIRONMENT'])
