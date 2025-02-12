@@ -52,7 +52,9 @@ def log_function_call(func):
 @log_function_call
 @app.before_request
 def before_request():
-    logging.debug("BEFORE_REQUEST: {} {}".format(request.method,request.url))   
+    # Log Trace
+    trace_message = "elo_trace | method:{}; url:{}; endpoint:{}".format(request.method,request.base_url,request.endpoint)
+    logging.info(trace_message)
 
 class HelloMathfunctions(Resource):
     @log_function_call
