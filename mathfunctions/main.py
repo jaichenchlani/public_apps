@@ -52,8 +52,11 @@ def log_function_call(func):
 @log_function_call
 @app.before_request
 def before_request():
+    if request.method == 'OPTIONS':
+        user_message = "Preflight request successful." 
+        return user_message, 200
     # Log Trace
-    trace_message = "elo_trace | method:{}; url:{}; endpoint:{}".format(request.method,request.base_url,request.endpoint)
+    trace_message = "elo_trace | method:{}; endpoint:{}; url:{}".format(request.method,request.endpoint,request.base_url)
     logging.info(trace_message)
 
 class HelloMathfunctions(Resource):
