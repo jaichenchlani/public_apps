@@ -6,14 +6,15 @@ with open(config_filename, "r") as config_file:
     config = yaml.load(config_file.read(), Loader=yaml.FullLoader)
 
 # Configure the basic logging level per the config
+logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
 # Ensure logs are written to stdout (Cloud Logging agent captures stdout/stderr)
-logging.basicConfig(
-    level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']),  # Capture DEBUG and INFO logs
-    format="%(levelname)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)  # Ensures logs go to stdout
-    ]
-)
+# logging.basicConfig(
+#     level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']),  # Capture DEBUG and INFO logs
+#     format="%(levelname)s: %(message)s",
+#     handlers=[
+#         logging.StreamHandler(sys.stdout)  # Ensures logs go to stdout
+#     ]
+# )
 
 # Decorator to log function calls
 def log_function_call(func):

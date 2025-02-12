@@ -1,8 +1,6 @@
-from urllib import response
 from flask import Flask, request, jsonify
-from flask_api import status
-import json, yaml, logging, functools, inspect, os, sys
 from flask_restful import Resource, Api
+import json, yaml, logging, functools, inspect, os, sys
 import mathfunctions
 
 # Create an instance of Flask
@@ -17,14 +15,16 @@ with open(config_filename, "r") as config_file:
     config = yaml.load(config_file.read(), Loader=yaml.FullLoader)
 
 # Configure the basic logging level per the config
+logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
 # Ensure logs are written to stdout (Cloud Logging agent captures stdout/stderr)
-logging.basicConfig(
-    level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']),  # Capture DEBUG and INFO logs
-    format="%(levelname)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)  # Ensures logs go to stdout
-    ]
-)
+# logging.basicConfig(
+#     level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']),  # Capture DEBUG and INFO logs
+#     format="%(levelname)s: %(message)s",
+#     handlers=[
+#         logging.FileHandler(config['log_file']),
+#         logging.StreamHandler(sys.stdout)  # Ensures logs go to stdout
+#     ]
+# )
 
 # Decorator to log function calls
 def log_function_call(func):
@@ -61,7 +61,7 @@ class HelloMathfunctions(Resource):
             'endpoint6':'/ispositive/<n>',
             'endpoint7':'/isinteger/<n>'
         }
-        return data, status.HTTP_200_OK
+        return data, 200
     
     @log_function_call
     def post(self):
@@ -96,8 +96,8 @@ class ChangeBase(Resource):
             return data, status.HTTP_400_BAD_REQUEST
         else:
             data['result'] = output['result']
-            data['http_status_code'] = status.HTTP_200_OK
-            return data, status.HTTP_200_OK
+            data['http_status_code'] = 200
+            return data, 200
 
 class GetFactors(Resource):
     @log_function_call
@@ -131,8 +131,8 @@ class GetFactors(Resource):
             data['result']['factorsCount'] = output['factorsCount']
             data['result']['isPrime'] = output['isPrime']
             data['result']['factors'] = output['factors']
-            data['http_status_code'] = status.HTTP_200_OK
-            return data, status.HTTP_200_OK
+            data['http_status_code'] = 200
+            return data, 200
 
 class GetPrimeFactors(Resource):
     @log_function_call
@@ -166,8 +166,8 @@ class GetPrimeFactors(Resource):
             data['result']['factorsCount'] = output['factorsCount']
             data['result']['isPrime'] = output['isPrime']
             data['result']['primeFactors'] = output['primeFactors']
-            data['http_status_code'] = status.HTTP_200_OK
-            return data, status.HTTP_200_OK
+            data['http_status_code'] = 200
+            return data, 200
 
 class IsPrime(Resource):
     @log_function_call
@@ -195,8 +195,8 @@ class IsPrime(Resource):
             return data, status.HTTP_400_BAD_REQUEST
         else:
             data['result'] = output['result']
-            data['http_status_code'] = status.HTTP_200_OK
-            return data, status.HTTP_200_OK
+            data['http_status_code'] = 200
+            return data, 200
 
 class IsEven(Resource):
     @log_function_call
@@ -224,8 +224,8 @@ class IsEven(Resource):
             return data, status.HTTP_400_BAD_REQUEST
         else:
             data['result'] = output['result']
-            data['http_status_code'] = status.HTTP_200_OK
-            return data, status.HTTP_200_OK
+            data['http_status_code'] = 200
+            return data, 200
 
 class IsPositive(Resource):
     @log_function_call
@@ -253,8 +253,8 @@ class IsPositive(Resource):
             return data, status.HTTP_400_BAD_REQUEST
         else:
             data['result'] = output['result']
-            data['http_status_code'] = status.HTTP_200_OK
-            return data, status.HTTP_200_OK
+            data['http_status_code'] = 200
+            return data, 200
 
 class IsInteger(Resource):
     @log_function_call
@@ -270,8 +270,8 @@ class IsInteger(Resource):
         }
         # Call the appropriate routine
         data['result'] = mathfunctions.isInteger(n)
-        data['http_status_code'] = status.HTTP_200_OK
-        return data, status.HTTP_200_OK
+        data['http_status_code'] = 200
+        return data, 200
 
 api.add_resource(HelloMathfunctions, '/')
 api.add_resource(ChangeBase, '/changebase/<n>/<base>')

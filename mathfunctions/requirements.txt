@@ -1,4 +1,29 @@
-Flask==2.2.5
+# Web Framework
+Flask==3.0.0
 flask-restful==0.3.9
-flask_api==2.0 
-werkzeug==2.3.8
+flask-cors==4.0.0
+Flask-JWT-Extended==4.6.0
+Flask-Mail==0.9.1
+
+# Data Processing
+pandas==2.1.4
+openpyxl==3.1.2
+# pyarrow==14.0.1  # Add explicit version
+# db-dtypes==1.1.1  # Pin version
+
+# Google Cloud
+google-cloud-firestore==2.11.1
+google-cloud-secret-manager==2.10.0
+google-cloud-pubsub==2.18.4
+google-cloud-bigquery[pandas]==3.11.4
+
+# Utils
+PyYAML==6.0.1
+bcrypt==4.0.1
+svgwrite==1.4.3
+python-barcode
+Pillow
+
+# Development
+# setuptools>=65.5.1
+# wheel>=0.38.4
