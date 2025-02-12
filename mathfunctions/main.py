@@ -1,11 +1,9 @@
 from urllib import response
 from flask import Flask, request, jsonify
 from flask_api import status
-import json
+import json, yaml, logging, functools, inspect, os
 from flask_restful import Resource, Api
 import mathfunctions
-
-print("Entering main.py...")
 
 # Create an instance of Flask
 app = Flask(__name__)
@@ -13,7 +11,35 @@ app = Flask(__name__)
 # Create the API
 api = Api(app)
 
+# Load config
+config_filename = "config/config_{}.yaml".format(os.environ['PUBLICAPPS_ENVIRONMENT'])
+with open(config_filename, "r") as config_file:
+    config = yaml.load(config_file.read(), Loader=yaml.FullLoader)
+
+# Configure the basic logging level per the config
+logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
+
+# Decorator to log function calls
+def log_function_call(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Get the CALLER function name
+        caller_frame = inspect.currentframe().f_back
+        caller_function_name = caller_frame.f_code.co_name
+        caller_module_name = inspect.getmodule(caller_frame).__name__
+        caller = "{}.{}".format(caller_module_name,caller_function_name)
+        # Get the CALLED function name
+        module = "{}.{}".format(__name__,func.__name__)
+        logging.debug("ENTER: {}. Caller: {}".format(module,caller))
+        # Execute the function
+        result = func(*args, **kwargs)
+        logging.debug("EXIT: {}.".format(func.__name__))
+        return result
+    return wrapper
+
+
 class HelloMathfunctions(Resource):
+    @log_function_call
     def get(self):
         data = {
             'name': "mathfunctions",
@@ -29,11 +55,14 @@ class HelloMathfunctions(Resource):
             'endpoint7':'/isinteger/<n>'
         }
         return data, status.HTTP_200_OK
+    
+    @log_function_call
     def post(self):
         some_json = request.get_json()
         return {'you sent': some_json}, status.HTTP_201_CREATED
 
 class ChangeBase(Resource):
+    @log_function_call
     def get(self, n, base):
         # Initialize the response dictionary
         data = {
@@ -64,6 +93,7 @@ class ChangeBase(Resource):
             return data, status.HTTP_200_OK
 
 class GetFactors(Resource):
+    @log_function_call
     def get(self, n):
         data = {
             'input_number': n,
@@ -98,6 +128,7 @@ class GetFactors(Resource):
             return data, status.HTTP_200_OK
 
 class GetPrimeFactors(Resource):
+    @log_function_call
     def get(self, n):
         data = {
             'input_number': n,
@@ -132,6 +163,7 @@ class GetPrimeFactors(Resource):
             return data, status.HTTP_200_OK
 
 class IsPrime(Resource):
+    @log_function_call
     def get(self, n):
         data = {
             'input_number': n,
@@ -160,6 +192,7 @@ class IsPrime(Resource):
             return data, status.HTTP_200_OK
 
 class IsEven(Resource):
+    @log_function_call
     def get(self, n):
         data = {
             'input_number': n,
@@ -188,6 +221,7 @@ class IsEven(Resource):
             return data, status.HTTP_200_OK
 
 class IsPositive(Resource):
+    @log_function_call
     def get(self, n):
         data = {
             'input_number': n,
@@ -216,6 +250,7 @@ class IsPositive(Resource):
             return data, status.HTTP_200_OK
 
 class IsInteger(Resource):
+    @log_function_call
     def get(self, n):
         data = {
             'input_number': n,
@@ -241,6 +276,5 @@ api.add_resource(IsPositive, '/ispositive/<n>')
 api.add_resource(IsInteger, '/isinteger/<n>')
 
 if __name__ == "__main__":
-    port = "8080"
-    print("Starting Mathfunctions Flask API on Port {}...".format(port))
-    app.run(debug=True, host='0.0.0.0',port=port)
+    logging.info("Starting {} Flask API in {} on Port {}...".format(config['app']['name'],os.environ['PUBLICAPPS_ENVIRONMENT'].upper(),config['app']['port']))
+    app.run(debug=config['app']['debug'], host='0.0.0.0',port=config['app']['port'])

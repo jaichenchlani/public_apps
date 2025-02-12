@@ -1,0 +1,4 @@
+app:
+  name: mathfunctions
+  debug: True
+  port: 8080

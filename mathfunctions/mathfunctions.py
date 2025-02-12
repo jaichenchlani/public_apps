@@ -1,5 +1,32 @@
-import math
+import math, logging, yaml, os, functools, inspect
 
+# Load config
+config_filename = "config/config_{}.yaml".format(os.environ['PUBLICAPPS_ENVIRONMENT'])
+with open(config_filename, "r") as config_file:
+    config = yaml.load(config_file.read(), Loader=yaml.FullLoader)
+
+# Configure the basic logging level per the config
+logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
+
+# Decorator to log function calls
+def log_function_call(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Get the CALLER function name
+        caller_frame = inspect.currentframe().f_back
+        caller_function_name = caller_frame.f_code.co_name
+        caller_module_name = inspect.getmodule(caller_frame).__name__
+        caller = "{}.{}".format(caller_module_name,caller_function_name)
+        # Get the CALLED function name
+        module = "{}.{}".format(__name__,func.__name__)
+        logging.debug("ENTER: {}. Caller: {}".format(module,caller))
+        # Execute the function
+        result = func(*args, **kwargs)
+        logging.debug("EXIT: {}.".format(func.__name__))
+        return result
+    return wrapper
+
+@log_function_call
 def changeBase(n, base):
     # print("Entering getBinary...")
     baseReference = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
@@ -60,7 +87,7 @@ def changeBase(n, base):
     
     return response
 
-
+@log_function_call
 def isPrime(n):
     # print("Entering isPrime for {}...".format(n))
     # Initialize Response Dictionary
@@ -83,6 +110,7 @@ def isPrime(n):
     
     return response
 
+@log_function_call
 def isEven(n):
     # print("Entering isEven...")
     # Initialize Response Dictionary
@@ -116,6 +144,7 @@ def isEven(n):
             }
     return response
 
+@log_function_call
 def getFactors(n):
     # print("Entering getFactors...")
     factorsSet = set()
@@ -186,6 +215,7 @@ def getFactors(n):
 
     return response
 
+@log_function_call
 def isPositive(n):
     # print("Entering isPositive...")
     # Initialize Response Dictionary
@@ -227,6 +257,7 @@ def isPositive(n):
     return response
 
 # Validate whether the passed string is a valid integer, and return a boolean result
+@log_function_call
 def isInteger(str_number):
     # print("Entering isInteger...")
     try:
@@ -236,6 +267,7 @@ def isInteger(str_number):
 
     return True
 
+@log_function_call
 def getPrimeFactors(n):
     # print("Entering getPrimeFactors...")
     # Initialize Response Dictionary
