@@ -1,3 +1,5 @@
-Flask==2.0.3
+Flask==2.2.5
 flask-restful==0.3.9
-flask_api
+flask_api 
+werkzeug==2.3.8
+
