@@ -49,6 +49,10 @@ def log_function_call(func):
         return result
     return wrapper
 
+@log_function_call
+@app.before_request
+def before_request():
+    logging.debug("BEFORE_REQUEST: {} {}".format(request.method,request.url))   
 
 class HelloMathfunctions(Resource):
     @log_function_call
