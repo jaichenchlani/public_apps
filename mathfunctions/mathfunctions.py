@@ -1,9 +1,14 @@
 import math, logging, yaml, os, functools, inspect, sys
+import google.cloud.logging
 
 # Load config
 config_filename = "config/config_{}.yaml".format(os.environ['PUBLICAPPS_ENVIRONMENT'])
 with open(config_filename, "r") as config_file:
     config = yaml.load(config_file.read(), Loader=yaml.FullLoader)
+
+# Set up logging
+client = google.cloud.logging.Client()
+client.setup_logging()
 
 # Configure the basic logging level per the config
 logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))

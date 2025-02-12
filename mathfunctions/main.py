@@ -10,6 +10,7 @@ app = Flask(__name__)
 # Create the API
 api = Api(app)
 
+# Set up logging
 client = google.cloud.logging.Client()
 client.setup_logging()
 
