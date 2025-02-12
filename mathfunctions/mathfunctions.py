@@ -8,10 +8,10 @@ with open(config_filename, "r") as config_file:
 
 # Set up logging
 client = google.cloud.logging.Client()
-client.setup_logging()
+client.setup_logging(log_level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
 
 # Configure the basic logging level per the config
-logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
+# logging.basicConfig(level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
 # Ensure logs are written to stdout (Cloud Logging agent captures stdout/stderr)
 # logging.basicConfig(
 #     level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']),  # Capture DEBUG and INFO logs

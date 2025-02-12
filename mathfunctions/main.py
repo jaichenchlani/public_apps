@@ -12,7 +12,7 @@ api = Api(app)
 
 # Set up logging
 client = google.cloud.logging.Client()
-client.setup_logging()
+client.setup_logging(log_level=int(os.environ['PUBLICAPPS_LOGGING_LEVEL']))
 
 # Load config
 config_filename = "config/config_{}.yaml".format(os.environ['PUBLICAPPS_ENVIRONMENT'])
@@ -71,7 +71,7 @@ class HelloMathfunctions(Resource):
     @log_function_call
     def post(self):
         some_json = request.get_json()
-        return {'you sent': some_json}, status.HTTP_201_CREATED
+        return {'you sent': some_json}, 201
 
 class ChangeBase(Resource):
     @log_function_call
@@ -90,15 +90,15 @@ class ChangeBase(Resource):
         # Validate Input
         if not mathfunctions.isInteger(n) or not mathfunctions.isInteger(base):
             data['user_message'] = "Both the URL parameters must be numeric."
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         # Call the appropriate routine
         output = mathfunctions.changeBase(int(n),int(base))
         # Check for valid output
         if not output['validOutputReturned']:
             data['user_message'] = output['message']
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         else:
             data['result'] = output['result']
             data['http_status_code'] = 200
@@ -123,15 +123,15 @@ class GetFactors(Resource):
         # Validate Input
         if not mathfunctions.isInteger(n):
             data['user_message'] = "URL parameters must be numeric."
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         # Call the appropriate routine
         output = mathfunctions.getFactors(int(n))
         # Check for valid output
         if not output['validOutputReturned']:
             data['user_message'] = output['message']
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         else:
             data['result']['factorsCount'] = output['factorsCount']
             data['result']['isPrime'] = output['isPrime']
@@ -158,15 +158,15 @@ class GetPrimeFactors(Resource):
         # Validate Input
         if not mathfunctions.isInteger(n):
             data['user_message'] = "URL parameters must be numeric."
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         # Call the appropriate routine
         output = mathfunctions.getPrimeFactors(int(n))
         # Check for valid output
         if not output['validOutputReturned']:
             data['user_message'] = output['message']
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         else:
             data['result']['factorsCount'] = output['factorsCount']
             data['result']['isPrime'] = output['isPrime']
@@ -189,15 +189,15 @@ class IsPrime(Resource):
         # Validate Input
         if not mathfunctions.isInteger(n):
             data['user_message'] = "URL parameters must be numeric."
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         # Call the appropriate routine
         output = mathfunctions.isPrime(int(n))
         # Check for valid output
         if not output['validOutputReturned']:
             data['user_message'] = output['message']
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         else:
             data['result'] = output['result']
             data['http_status_code'] = 200
@@ -218,15 +218,15 @@ class IsEven(Resource):
         # Validate Input
         if not mathfunctions.isInteger(n):
             data['user_message'] = "URL parameters must be numeric."
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         # Call the appropriate routine
         output = mathfunctions.isEven(int(n))
         # Check for valid output
         if not output['validOutputReturned']:
             data['user_message'] = output['message']
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         else:
             data['result'] = output['result']
             data['http_status_code'] = 200
@@ -247,15 +247,15 @@ class IsPositive(Resource):
         # Validate Input
         if not mathfunctions.isInteger(n):
             data['user_message'] = "URL parameters must be numeric."
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         # Call the appropriate routine
         output = mathfunctions.isPositive(int(n))
         # Check for valid output
         if not output['validOutputReturned']:
             data['user_message'] = output['message']
-            data['http_status_code'] = status.HTTP_400_BAD_REQUEST
-            return data, status.HTTP_400_BAD_REQUEST
+            data['http_status_code'] = 400
+            return data, 400
         else:
             data['result'] = output['result']
             data['http_status_code'] = 200
